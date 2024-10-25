@@ -54,6 +54,45 @@ def validate_date(value):
     return value
 
 
+def validate_types(value):
+    valid_types = [
+        "TRIGGER_FAILURE",
+        "TRIGGER_ERROR_HANDLER",
+        "DB_TRIGGER",
+        "AUTH_TRIGGER",
+        "SCHEDULED_TRIGGER",
+        "FUNCTION",
+        "SERVICE_FUNCTION",
+        "STREAM_FUNCTION",
+        "SERVICE_STREAM_FUNCTION",
+        "AUTH",
+        "WEBHOOK",
+        "ENDPOINT",
+        "PUSH",
+        "API",
+        "API_KEY",
+        "GRAPHQL",
+        "SYNC_CONNECTION_START",
+        "SYNC_CONNECTION_END",
+        "SYNC_SESSION_START",
+        "SYNC_SESSION_END",
+        "SYNC_CLIENT_WRITE",
+        "SYNC_ERROR",
+        "SYNC_OTHER",
+        "SCHEMA_ADDITIVE_CHANGE",
+        "SCHEMA_GENERATION",
+        "SCHEMA_VALIDATION",
+        "LOG_FORWARDER",
+    ]
+    types = value.split(",")
+    for t in types:
+        if t not in valid_types:
+            raise argparse.ArgumentTypeError(
+                f"{t} is not a valid type. Valid types are: {', '.join(valid_types)}"
+            )
+    return value
+
+
 def authenticate(public_api_key, private_api_key):
     """
     Authenticate with MongoDB Atlas using the provided public and private API keys.
@@ -142,6 +181,12 @@ def main():
         default=None,
         help="End Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ)",
     )
+    parser.add_argument(
+        "--type",
+        type=validate_types,
+        default=None,
+        help="Comma-separated list of log types to fetch",
+    )
 
     args = parser.parse_args()
     access_token = authenticate(args.public_api_key, args.private_api_key)
@@ -149,7 +194,7 @@ def main():
         args.project_id,
         args.app_id,
         access_token,
-        {"start_date": args.start_date, "end_date": args.end_date},
+        {"start_date": args.start_date, "end_date": args.end_date, "type": args.type},
     )
     all_logs = pager.get_all_logs()
     with open("logs.json", "w") as file:

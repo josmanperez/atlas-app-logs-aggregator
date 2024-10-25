@@ -40,6 +40,7 @@ app_id (required): The App ID (string).
 * `private_api_key` (required): The Atlas Private API Key (string with hyphens).
 * `--start_date` (optional): Start Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ).
 * `--end_date` (optional): End Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ).
+* `--type` (optional): Comma-separated list of supported log types. 
 
 ### Example
 
