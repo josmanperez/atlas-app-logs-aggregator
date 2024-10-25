@@ -1,6 +1,6 @@
 # MongoDB Atlas Logs Fetcher
 
-This tool is a Python script (`logs.py`) designed to fetch logs from a MongoDB Atlas App Services application using pagination. It supports optional date range filtering and provides a way to authenticate using MongoDB Atlas API keys.
+This tool is a Python script designed to fetch logs from a MongoDB Atlas App Services application using pagination. It supports optional date range filtering and provides a way to authenticate using MongoDB Atlas API keys.
 
 ## Features
 
