@@ -19,3 +19,7 @@ logs.json
 
 # Ignore environment variable files
 .env
+
+# Application logs
+app_*.log
+logs/*

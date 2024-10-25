@@ -1,5 +1,6 @@
 import re
 import argparse
+from functools import wraps
 
 """
 utils.py
@@ -17,34 +18,37 @@ Functions:
 """
 
 
-def validate_hex(value):
+def validate_hex(value, logger=None):
     """
     validate_hex function checks if the input is a valid hexadecimal string.
     """
     if not re.fullmatch(r"[0-9a-fA-F]+", value):
         raise argparse.ArgumentTypeError(f"{value} is not a valid hexadecimal string")
+
     return value
 
 
-def validate_string(value):
+def validate_string(value, logger=None):
     """
     validate_string function checks if the input is a valid string.
     """
     if not isinstance(value, str) or not value.strip():
         raise argparse.ArgumentTypeError(f"{value} is not a valid string")
+
     return value
 
 
-def validate_private_key(value):
+def validate_private_key(value, logger=None):
     """
     validate_private_key function checks if the input is a valid private key format.
     """
     if not re.fullmatch(r"[0-9a-fA-F-]+", value):
         raise argparse.ArgumentTypeError(f"{value} is not a valid private key format")
+
     return value
 
 
-def validate_date(value):
+def validate_date(value, logger=None):
     """
     Validate that the given date string follows the ISO 8601 format: YYYY-MM-DDTHH:MM:SS.MMM.
 
@@ -65,7 +69,7 @@ def validate_date(value):
     return value
 
 
-def validate_types(value):
+def validate_types(value, logger=None):
     """
     Validate that the given string is a comma-separated list of valid log types.
 
@@ -113,4 +117,5 @@ def validate_types(value):
             raise argparse.ArgumentTypeError(
                 f"{t} is not a valid type. Valid types are: {', '.join(valid_types)}"
             )
+
     return value
