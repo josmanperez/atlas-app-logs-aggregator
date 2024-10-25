@@ -134,13 +134,13 @@ def main():
         "--start_date",
         type=validate_date,
         default=None,
-        help="Start Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMM)",
+        help="Start Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ)",
     )
     parser.add_argument(
         "--end_date",
         type=validate_date,
         default=None,
-        help="End Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMM)",
+        help="End Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ)",
     )
 
     args = parser.parse_args()
