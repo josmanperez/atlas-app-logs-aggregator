@@ -17,7 +17,7 @@ This tool is a Python script (`logs.py`) designed to fetch logs from a MongoDB A
 
 ## Installation 
 
-### Create a virtual environment:
+### Create a virtual environment:
 
 ```basg
 python3 -m venv venv
