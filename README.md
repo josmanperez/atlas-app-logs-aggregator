@@ -41,6 +41,7 @@ app_id (required): The App ID (string).
 * `--start_date` (optional): Start Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ).
 * `--end_date` (optional): End Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ).
 * `--type` (optional): Comma-separated list of supported log types. 
+* `--verbose` (optional): Enable verbose logging information.
 
 ### Example
 
@@ -50,7 +51,23 @@ python  <project_id> <app_id> <public_api_key> <private_api_key> --start_date 20
 
 If `start_date` and `end_date` are not provided, the script will default `start_date` to the last 24 hours from the current time.
 
-### Benefits
+## Logging
+
+The script supports logging to both the console and a log file. By default, log files are stored in the logs folder. The log file name includes a timestamp to ensure uniqueness for each run.
+
+`--verbose`: When this flag is used, the log level is set to `DEBUG`, providing detailed logging information. Without this flag, the log level is set to `INFO`.
+
+### Log File Location
+
+Log files are stored in the logs folder. Each log file is named with a timestamp to ensure that logs from different runs do not overwrite each other.
+
+### Example Log File Name
+
+```bash
+logs/app_20241005_143000.log
+```
+
+## Benefits
 
 * **Automated Log Retrieval**: Easily fetch logs from MongoDB Atlas App Services without manual intervention.
 * **Date Range Filtering**: Filter logs by date range to focus on specific periods.
