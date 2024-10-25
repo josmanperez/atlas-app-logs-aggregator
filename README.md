@@ -46,7 +46,7 @@ app_id (required): The App ID (string).
 ### Example
 
 ```bash
-python  <project_id> <app_id> <public_api_key> <private_api_key> --start_date 2024-10-05T14:30:00.000Z --end_date 2024-10-06T14:30:00.000Z --type TRIGGER_FAILURE,SCHEMA_GENERATION
+python main.py <project_id> <app_id> <public_api_key> <private_api_key> --start_date 2024-10-05T14:30:00.000Z --end_date 2024-10-06T14:30:00.000Z --type TRIGGER_FAILURE,SCHEMA_GENERATION
 ```
 
 If `start_date` and `end_date` are not provided, the script will default `start_date` to the last 24 hours from the current time.
