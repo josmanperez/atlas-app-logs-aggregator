@@ -1,5 +1,6 @@
 import requests
 from config import ADMIN_API_BASE_URL
+from logger import Logger
 
 """
 auth.py
@@ -15,7 +16,7 @@ Functions:
 """
 
 
-def authenticate(public_api_key, private_api_key):
+def authenticate(public_api_key, private_api_key, logger=None):
     """
     Authenticate with MongoDB Atlas using the provided public and private API keys.
 
@@ -34,9 +35,21 @@ def authenticate(public_api_key, private_api_key):
         requests.exceptions.HTTPError: If the HTTP request returned an unsuccessful status code.
         requests.exceptions.RequestException: For other types of request-related errors.
     """
+    if logger is None:
+        logger = Logger()
+
     url = f"{ADMIN_API_BASE_URL}/auth/providers/mongodb-cloud/login"
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
     payload = {"username": public_api_key, "apiKey": private_api_key}
+
+    logger.info("Sending authentication request to MongoDB Atlas.")
+    logger.debug(f"Authenticating to {url} with public key: {public_api_key}")
     response = requests.post(url, headers=headers, json=payload)
-    response.raise_for_status()
-    return response.json()["access_token"]
+    try:
+        response.raise_for_status()
+        logger.info("Authentication successful.")
+        logger.debug(f"Received access token: {response.json()['access_token']}")
+        return response.json()["access_token"]
+    except requests.exceptions.HTTPError as err:
+        logger.error(f"Authentication failed: {err}")
+        raise
