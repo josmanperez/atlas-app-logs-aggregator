@@ -1,7 +1,6 @@
 import re
 import argparse
 from functools import wraps
-from logger import Logger  # Import the Logger class
 
 """
 utils.py
@@ -19,63 +18,36 @@ Functions:
 """
 
 
-def ensure_logger(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        # Check if 'logger' is in kwargs and if it is None
-        if "logger" not in kwargs or kwargs["logger"] is None:
-            # Initialize a default Logger instance
-            kwargs["logger"] = Logger()
-        # Call the original function with the modified kwargs
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-@ensure_logger
 def validate_hex(value, logger=None):
     """
     validate_hex function checks if the input is a valid hexadecimal string.
     """
-
-    logger.debug(f"Validating hex: {value}")
     if not re.fullmatch(r"[0-9a-fA-F]+", value):
-        logger.error(f"Invalid hexadecimal string: {value}")
         raise argparse.ArgumentTypeError(f"{value} is not a valid hexadecimal string")
 
-    logger.debug(f"Hex validated: {value}")
     return value
 
 
-@ensure_logger
 def validate_string(value, logger=None):
     """
     validate_string function checks if the input is a valid string.
     """
-    logger.debug(f"Validating string: {value}")
     if not isinstance(value, str) or not value.strip():
-        logger.error(f"Invalid string: {value}")
         raise argparse.ArgumentTypeError(f"{value} is not a valid string")
 
-    logger.debug(f"String validated: {value}")
     return value
 
 
-@ensure_logger
 def validate_private_key(value, logger=None):
     """
     validate_private_key function checks if the input is a valid private key format.
     """
-    logger.debug(f"Validating private key: {value}")
     if not re.fullmatch(r"[0-9a-fA-F-]+", value):
-        logger.error(f"Invalid private key: {value}")
         raise argparse.ArgumentTypeError(f"{value} is not a valid private key format")
 
-    logger.debug("Private key validated")
     return value
 
 
-@ensure_logger
 def validate_date(value, logger=None):
     """
     Validate that the given date string follows the ISO 8601 format: YYYY-MM-DDTHH:MM:SS.MMM.
@@ -89,18 +61,14 @@ def validate_date(value, logger=None):
     Raises:
         argparse.ArgumentTypeError: If the date string does not follow the ISO 8601 format.
     """
-    logger.debug(f"Validating date: {value}")
     iso_8601_pattern = r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z"
     if not re.fullmatch(iso_8601_pattern, value):
-        logger.error(f"Invalid date format: {value}")
         raise argparse.ArgumentTypeError(
             f"{value} is not a valid date format. Use 'YYYY-MM-DDTHH:MM:SS.MMMZ'"
         )
-    logger.debug(f"Date validated: {value}")
     return value
 
 
-@ensure_logger
 def validate_types(value, logger=None):
     """
     Validate that the given string is a comma-separated list of valid log types.
@@ -114,7 +82,6 @@ def validate_types(value, logger=None):
     Raises:
         argparse.ArgumentTypeError: If any of the log types are not valid.
     """
-    logger.debug(f"Validating types: {value}")
     valid_types = [
         "TRIGGER_FAILURE",
         "TRIGGER_ERROR_HANDLER",
@@ -147,10 +114,8 @@ def validate_types(value, logger=None):
     types = value.split(",")
     for t in types:
         if t not in valid_types:
-            logger.error(f"Invalid type: {t}")
             raise argparse.ArgumentTypeError(
                 f"{t} is not a valid type. Valid types are: {', '.join(valid_types)}"
             )
 
-    logger.debug(f"Types validated: {types}")
     return value

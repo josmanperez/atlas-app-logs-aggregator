@@ -21,4 +21,5 @@ logs.json
 .env
 
 # Application logs
-app.log
+app_*.log
+logs/*

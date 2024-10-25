@@ -1,4 +1,6 @@
 import logging
+import os
+from datetime import datetime
 
 
 class Logger:
@@ -33,7 +35,7 @@ class Logger:
             cls._instance._initialized = False
         return cls._instance
 
-    def __init__(self, log_file="app.log", verbose=False):
+    def __init__(self, log_file=None, verbose=False):
         """
         Initialize the Logger instance.
 
@@ -41,12 +43,23 @@ class Logger:
         and configures the log level based on the verbose flag.
 
         Args:
-            log_file (str): The name of the log file. Defaults to "app.log".
+            log_file (str, optional): The name of the log file. If not provided, a timestamped log file name is used.
             verbose (bool): A flag to set the log level to DEBUG if True, or INFO if False. Defaults to False.
         """
+
         if self._initialized:
             return
         self._initialized = True
+
+        log_dir = "logs"
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+
+        if log_file is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            log_file = os.path.join(log_dir, f"app_{timestamp}.log")
+        else:
+            log_file = os.path.join(log_dir, log_file)
 
         self.logger = logging.getLogger("AppLogger")
         self.logger.setLevel(logging.DEBUG if verbose else logging.INFO)

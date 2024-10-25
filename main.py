@@ -50,7 +50,7 @@ def main():
 
     args = parser.parse_args()
 
-    logger = Logger(verbose=args.verbose)
+    logger = Logger(verbose=args.verbose)    
     logger.info("Starting log fetching process...")
 
     try:
