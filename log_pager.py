@@ -77,9 +77,12 @@ class LogPager:
         logs = []
         has_next = True
         prev_page = None
+        page_number = 1  # Initialize page counter
         while has_next:
+            print(f"Fetching page {page_number}...")  # Print current page number
             page = self.get_next_page(prev_page)
             logs.extend(page["logs"])
             has_next = "nextEndDate" in page
             prev_page = page
+            page_number += 1  # Increment page counter
         return logs
