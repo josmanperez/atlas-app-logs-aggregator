@@ -46,13 +46,13 @@ def main():
         default=None,
         help="Return only log messages associated with the given user_id.",
     )
-    parser.add_argument("--errors_only", action="store_true", help="Return only error log messages")
     parser.add_argument(
         "--type",
         type=validate_types,
         default=None,
         help="Comma-separated list of log types to fetch",
     )
+    parser.add_argument("--errors_only", action="store_true", help="Return only error log messages")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
     args = parser.parse_args()
@@ -62,17 +62,20 @@ def main():
 
     try:
         access_token = authenticate(args.public_api_key, args.private_api_key)
+        query_params = {
+            "start_date": args.start_date,
+            "end_date": args.end_date,
+            "type": args.type,
+        }
+        if args.errors_only:
+            query_params["errors_only"] = "true"  # Add the only_error parameter if the flag is specified
+
+        print(query_params)
         pager = LogPager(
             args.project_id,
             args.app_id,
             access_token,
-            {
-                "start_date": args.start_date,
-                "end_date": args.end_date,
-                "type": args.type,
-                "user_id": args.user_id,
-                
-            },
+            query_params,
             logger=logger,
         )
 
