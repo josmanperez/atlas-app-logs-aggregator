@@ -66,11 +66,22 @@ class LogPager:
 
         params = {**self.query_params, "end_date": next_end_date, "skip": next_skip}
         self.logger.debug(f"Fetching logs with params: {params}")
-        response = requests.get(
-            self.logs_endpoint, headers=self.auth_headers, params=params
-        )
-        response.raise_for_status()
-        return response.json()
+        try:
+            response = requests.get(
+                self.logs_endpoint, headers=self.auth_headers, params=params
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.HTTPError as e:
+            self.logger.error(f"HTTP error occurred: {e}")
+            try:
+                error_message = response.json().get(
+                    "error", "No error message provided"
+                )
+                self.logger.error(f"Error message from response: {error_message}")
+            except ValueError as e:
+                self.logger.error("Failed to parse error message from response")
+            raise e
 
     def get_all_logs(self):
         """

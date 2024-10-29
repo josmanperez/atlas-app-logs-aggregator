@@ -41,6 +41,13 @@ def main():
         help="End Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ)",
     )
     parser.add_argument(
+        "--user_id",
+        type=validate_hex,
+        default=None,
+        help="Return only log messages associated with the given user_id.",
+    )
+    parser.add_argument("--errors_only", action="store_true", help="Return only error log messages")
+    parser.add_argument(
         "--type",
         type=validate_types,
         default=None,
@@ -63,6 +70,8 @@ def main():
                 "start_date": args.start_date,
                 "end_date": args.end_date,
                 "type": args.type,
+                "user_id": args.user_id,
+                
             },
             logger=logger,
         )
