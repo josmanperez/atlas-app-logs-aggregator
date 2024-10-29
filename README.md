@@ -8,6 +8,8 @@ This tool is a Python script designed to fetch logs from a MongoDB Atlas App Ser
 - Supports pagination to handle large sets of logs.
 - Optional date range filtering using `start_date` and `end_date` parameters.
 - Validates date inputs to ensure they follow the ISO 8601 format.
+- Optional `user_id` for user id filtering logs. 
+- Fetch only error logs using the `errors_only` option.
 - Authenticates using MongoDB Atlas public and private API keys.
 
 ## Requirements
@@ -34,14 +36,16 @@ pip install -r requirements.txt
 
 ### Command-Line Arguments
 
-* `project_id` (required): The Atlas Project ID (hexadecimal string).
-app_id (required): The App ID (string).
-* `public_api_key` (required): The Atlas Public API Key (string).
-* `private_api_key` (required): The Atlas Private API Key (string with hyphens).
+* `project_id` (**required**): The Atlas Project ID (hexadecimal string).
+app_id (**required**): The App ID (string).
+* `public_api_key` (**required**): The Atlas Public API Key (string).
+* `private_api_key` (**required**): The Atlas Private API Key (string with hyphens).
 * `--start_date` (optional): Start Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ).
 * `--end_date` (optional): End Date in ISO 8601 format (YYYY-MM-DDTHH:MM:SS.MMMZ).
-* `--type` (optional): Comma-separated list of supported log types. 
-* `--verbose` (optional): Enable verbose logging information. Currently, the types available are: `TRIGGER_FAILURE, TRIGGER_ERROR_HANDLER, DB_TRIGGER, AUTH_TRIGGER, SCHEDULED_TRIGGER, FUNCTION, SERVICE_FUNCTION, STREAM_FUNCTION, SERVICE_STREAM_FUNCTION, AUTH, WEBHOOK, ENDPOINT, PUSH, API, API_KEY, GRAPHQL, SYNC_CONNECTION_START, SYNC_CONNECTION_END, SYNC_SESSION_START, SYNC_SESSION_END, SYNC_CLIENT_WRITE, SYNC_ERROR, SYNC_OTHER, SCHEMA_ADDITIVE_CHANGE, SCHEMA_GENERATION, SCHEMA_VALIDATION, LOG_FORWARDER`
+* `--type` (optional): Comma-separated list of supported log types. Currently, the types available are: `TRIGGER_FAILURE, TRIGGER_ERROR_HANDLER, DB_TRIGGER, AUTH_TRIGGER, SCHEDULED_TRIGGER, FUNCTION, SERVICE_FUNCTION, STREAM_FUNCTION, SERVICE_STREAM_FUNCTION, AUTH, WEBHOOK, ENDPOINT, PUSH, API, API_KEY, GRAPHQL, SYNC_CONNECTION_START, SYNC_CONNECTION_END, SYNC_SESSION_START, SYNC_SESSION_END, SYNC_CLIENT_WRITE, SYNC_ERROR, SYNC_OTHER, SCHEMA_ADDITIVE_CHANGE, SCHEMA_GENERATION, SCHEMA_VALIDATION, LOG_FORWARDER`
+* `--user_id` (optional): Return only log messages associated with the given user_id.
+* `--only_error` (optional): Return only error log messages.
+* `--verbose` (optional): Enable verbose logging information. 
 
 ### Example
 
