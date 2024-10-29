@@ -23,7 +23,7 @@ This tool is a Python script designed to fetch logs from a MongoDB Atlas App Ser
 
 ### Create a virtual environment
 
-```basg
+```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 ```
