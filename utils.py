@@ -18,17 +18,17 @@ Functions:
 """
 
 
-def validate_hex(value, logger=None):
+def validate_hex(value):
     """
-    validate_hex function checks if the input is a valid hexadecimal string.
+    validate_hex function checks if the input is a valid ObjectID hexadecimal string.
     """
-    if not re.fullmatch(r"[0-9a-fA-F]+", value):
-        raise argparse.ArgumentTypeError(f"{value} is not a valid hexadecimal string")
+    if not re.fullmatch(r"^[0-9a-fA-F]{24}$", value):
+        raise argparse.ArgumentTypeError(f"{value} is not a valid ObjectID hexadecimal string")
 
     return value
 
 
-def validate_string(value, logger=None):
+def validate_string(value):
     """
     validate_string function checks if the input is a valid string.
     """
@@ -38,7 +38,7 @@ def validate_string(value, logger=None):
     return value
 
 
-def validate_private_key(value, logger=None):
+def validate_private_key(value):
     """
     validate_private_key function checks if the input is a valid private key format.
     """
@@ -48,7 +48,7 @@ def validate_private_key(value, logger=None):
     return value
 
 
-def validate_date(value, logger=None):
+def validate_date(value):
     """
     Validate that the given date string follows the ISO 8601 format: YYYY-MM-DDTHH:MM:SS.MMM.
 
@@ -69,7 +69,7 @@ def validate_date(value, logger=None):
     return value
 
 
-def validate_types(value, logger=None):
+def validate_types(value):
     """
     Validate that the given string is a comma-separated list of valid log types.
 

@@ -12,6 +12,23 @@ from utils import (
 )
 
 
+def parse_filtering_args(filtering_args):
+    """
+    Parse filtering arguments into a dictionary.
+
+    Args:
+        filtering_args (list): List of key-value pairs.
+
+    Returns:
+        dict: Dictionary of parsed key-value pairs.
+    """
+    filter_dic = {}
+    for arg in filtering_args:
+        key, value = arg.split("=")
+        filter_dic[key] = value
+    return filter_dic
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Fetch logs from App Services Application using pagination."
@@ -47,17 +64,32 @@ def main():
         help="Return only log messages associated with the given user_id.",
     )
     parser.add_argument(
+        "--co_id",
+        type=validate_hex,
+        default=None,
+        help="Return only log messages associated with the given request Correlation ID.",
+    )
+    parser.add_argument(
         "--type",
         type=validate_types,
         default=None,
         help="Comma-separated list of log types to fetch",
     )
-    parser.add_argument("--errors_only", action="store_true", help="Return only error log messages")
+    parser.add_argument(
+        "--errors_only", action="store_true", help="Return only error log messages"
+    )
+    parser.add_argument(
+        "--filter",
+        nargs="+",
+        help="Filter logs by key-value pairs (e.g., --filter key1=value1 key2=value2)",
+    )
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
     args = parser.parse_args()
 
-    logger = Logger(verbose=args.verbose)    
+    filter_dic = parse_filtering_args(args.filter) if args.filter else {}
+
+    logger = Logger(verbose=args.verbose)
     logger.info("Starting log fetching process...")
 
     try:
@@ -66,16 +98,20 @@ def main():
             "start_date": args.start_date,
             "end_date": args.end_date,
             "type": args.type,
+            "user_id": args.user_id,
+            "co_id": args.co_id,
         }
         if args.errors_only:
-            query_params["errors_only"] = "true"  # Add the only_error parameter if the flag is specified
+            query_params["errors_only"] = (
+                "true"  # Add the only_error parameter if the flag is specified
+            )
 
-        print(query_params)
         pager = LogPager(
             args.project_id,
             args.app_id,
             access_token,
             query_params,
+            filtering=filter_dic,  # Pass the filtering dictionary
             logger=logger,
         )
 

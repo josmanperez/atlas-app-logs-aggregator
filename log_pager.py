@@ -24,7 +24,15 @@ class LogPager:
         logger (Logger): The logger instance for logging operations.
     """
 
-    def __init__(self, project_id, app_id, access_token, query_params={}, logger=None):
+    def __init__(
+        self,
+        project_id,
+        app_id,
+        access_token,
+        query_params={},
+        filtering={},
+        logger=None,
+    ):
         """
         Initialize the LogPager with project ID, app ID, access token, query parameters, and logger.
 
@@ -39,6 +47,7 @@ class LogPager:
             f"{ADMIN_API_BASE_URL}/groups/{project_id}/apps/{app_id}/logs"
         )
         self.query_params = query_params
+        self.filtering = filtering
         self.auth_headers = {"Authorization": f"Bearer {access_token}"}
         self.logger = logger or Logger()
 
@@ -83,6 +92,55 @@ class LogPager:
                 self.logger.error("Failed to parse error message from response")
             raise e
 
+    def filter_logs(self, logs):
+        """
+        Filter logs based on the filtering dictionary.
+
+        Args:
+            logs (list): List of log entries.
+
+        Returns:
+            list: Filtered list of log entries.
+        """
+        if not self.filtering:
+            return logs
+
+        def log_matches_filter(log):
+            """
+            Check if a log entry matches the filtering criteria and log the process.
+
+            Args:
+                log (dict): A log entry.
+
+            Returns:
+                bool: True if the log entry matches the filtering criteria, False otherwise.
+            """
+            for (
+                key,
+                value,
+            ) in (
+                self.filtering.items()
+            ):  # iterates over the key-value pairs in the filtering dictionary.
+
+                log_value = log.get(key)
+                if log_value is None:
+                    self.logger.debug(f"Key '{key}' not found in log entry: {log}")
+                    return False
+                if log_value != value:
+                    self.logger.debug(
+                        f"Value mismatch for key '{key}': expected '{value}', found '{log_value}'"
+                    )
+                    return False
+            return True
+
+        """
+        Iterates over each log in the logs list and applies the log_matches_filter function.
+        * Only the first log entry matches the filtering criteria, so it is included in the filtered_logs list.
+        * The other log entries do not match the criteria and are excluded from the filtered_logs list.
+        """
+        filtered_logs = [log for log in logs if log_matches_filter(log)]
+        return filtered_logs
+
     def get_all_logs(self):
         """
         Fetch all logs using pagination.
@@ -102,7 +160,8 @@ class LogPager:
                 f"Fetching page {page_number}..."
             )  # Log current page number
             page = self.get_next_page(prev_page)
-            logs.extend(page["logs"])
+            filtered_logs = self.filter_logs(page["logs"])
+            logs.extend(filtered_logs)
             has_next = "nextEndDate" in page
             prev_page = page
             page_number += 1  # Increment page counter
