@@ -48,7 +48,7 @@ app_id (**required**): The App ID (string).
 - `--user_id` (optional): Return only log messages associated with the given user_id.
 - `--co_id` (optional): Return only log messages associated with the given request Correlation ID.
 - `--filter` (optional): Filter logs by key-value pairs (e.g., `--filter event_subscription_name=<trigger_name>,function_name=<function_name>`).
-- `--only_error` (optional): Return only error log messages.
+- `--errors_only` (optional): Return only error log messages.
 - `--verbose` (optional): Enable verbose logging information.
 
 ### Example
